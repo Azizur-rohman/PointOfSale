@@ -1,0 +1,252 @@
+﻿@model IEnumerable<PointOfSale.Models.Sale>
+@{ ViewBag.Title = "InvoiceList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var serial = 1; }
+
+
+<div class="col-xl-12 col-md-12 mb-12" ng-controller="HomeInvoiceList">
+    <div class="card" ng-show="invoice">
+        <div class="card-header">
+            Order
+            <strong>{{Sale.OrderNo}}</strong>
+            <span class="float-right"> <a class="btn btn-success" style="cursor: pointer; color: white" ng-click="EditInvoice()">Save</a></span>
+
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-sm-6">
+                    <div>
+                        <strong>M/s Enterprise</strong>
+                    </div>
+                    <div>Md. Unusur Rohman</div>
+                    <div>Arambag, Chapainawabganj</div>
+                    <div>Email: msenterprisemahi2018@gmail.com</div>
+                    <div>Phone: +8801722777723</div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="float-right">
+                        <div>
+                            <input type="text" ng-model="Sale.CustomerName" placeholder="Customer name" />
+                            <input type="hidden" ng-model="Sale.SaleId" class="BorderLess" placeholder="Customer Id" />
+                        </div>
+                        <div style="margin-top: 5px"><textarea ng-model="Sale.CustomerAddress" placeholder="Address"></textarea></div>
+                        <div><input ng-model="Sale.CustomerPhone" type="number" placeholder="Phone" /></div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <div class="table-responsive-sm">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="center">#</th>
+                            <th>Item</th>
+                            <th>Category</th>
+
+                            <th class="right">Unit Cost</th>
+                            <th class="center">Qty</th>
+                            <th class="right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="cart in InvoiceCart">
+                            <td class="center">{{$index+1}}</td>
+                            <td class="left strong">
+                                <select ng-model="cart.ProductId" ng-click="SetValueOfProduct(cart.ProductId);SubTotalCalculation();">
+                                    <option ng-repeat="product in ProductList" ng-selected="product.ProductId == cart.ProductId" value="{{product.ProductId}}">{{product.Name}}</option>
+                                </select>
+                            </td>
+                            <td class="left">{{cart.CategoryName}}</td>
+                            <td class="right"><input style="width: 120px" ng-model="cart.UnitPrice" value="{{cart.UnitPrice}}" /></td>
+                            <td class="center"><input style="width: 120px" class="BorderLess" ng-model="cart.Quantity" ng-change="OnChangeLineTotalSet(cart.ProductId);SubTotalCalculation();" value="1" type="number" placeholder="Quantity" /></td>
+                            <td class="right"><input style="width: 120px" value={{cart.Quantity*cart.UnitPrice}} ng-model="cart.LineTotal" /></td>
+                            <td><a href="#" ng-click="RowDelete($index,cart.SalesDetailId)"><i class="fa fa-times"></i></a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="#" ng-click="AddNewRow()"><i class="fa fa-plus"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-sm-5">
+
+                </div>
+
+                <div class="col-lg-6 col-sm-6 ml-auto">
+                    <table class="table table-clear">
+                        <tbody>
+                            <tr>
+                                <td class="left">
+                                    <strong>Subtotal</strong>
+                                </td>
+                                <td class="right">{{Sale.Subtotal}} BDT</td>
+                            </tr>
+                            <tr>
+                                <td class="left">
+                                    <strong>
+                                        Discount
+                                        <select ng-model="Sale.DiscountParcentage" ng-click="CalculateDiscount()">
+                                            <option disabled value="">--Select--</option>
+                                            <option value="0">0%</option>
+                                            <option value="1">1%</option>
+                                            <option value="2">2%</option>
+                                            <option value="3">3%</option>
+                                            <option value="4">4%</option>
+                                            <option value="5">5%</option>
+                                            <option value="6">6%</option>
+                                            <option value="7">7%</option>
+                                            <option value="8">8%</option>
+                                            <option value="9">9%</option>
+                                            <option value="10">10%</option>
+                                            <option value="11">11%</option>
+                                            <option value="12">12%</option>
+                                            <option value="13">13%</option>
+                                            <option value="14">14%</option>
+                                            <option value="15">15%</option>
+                                            <option value="16">16%</option>
+                                            <option value="17">17%</option>
+                                            <option value="18">18%</option>
+                                            <option value="19">19%</option>
+                                            <option value="20">20%</option>
+                                            <option value="30">30%</option>
+                                        </select>
+                                    </strong>
+                                </td>
+                                <td class="right">{{Sale.DiscountAmount}} BDT</td>
+                            </tr>
+                            <tr>
+                                <td class="left">
+                                    <strong>
+                                        Special Discount
+                                        <select ng-model="Sale.SpecialDiscountParcentage" ng-click="CalculateSpecialDiscount()">
+                                            <option disabled value="">--Select--</option>
+                                            <option value="0">0%</option>
+                                            <option value="1">1%</option>
+                                            <option value="2">2%</option>
+                                            <option value="3">3%</option>
+                                            <option value="4">4%</option>
+                                            <option value="5">5%</option>
+                                            <option value="6">6%</option>
+                                            <option value="7">7%</option>
+                                            <option value="8">8%</option>
+                                            <option value="9">9%</option>
+                                            <option value="10">10%</option>
+                                        </select>
+                                    </strong>
+                                </td>
+                                <td class="right">{{Sale.SpecialDiscountAmount}} BDT</td>
+                            </tr>
+                            <tr>
+                                <td class="left">
+                                    <strong>
+                                        VAT
+                                        <select ng-model="Sale.VatParcentage" ng-click="CalculateVat()">
+                                            <option disabled value="">--Select--</option>
+                                            <option value="0">0%</option>
+                                            <option value="5">5%</option>
+                                            <option value="10">10%</option>
+                                            <option value="20">20%</option>
+                                            <option value="30">30%</option>
+                                        </select>
+                                    </strong>
+                                </td>
+                                <td class="right">{{Sale.VatAmount}} BDT</td>
+                            </tr>
+                            <tr>
+                                <td class="left">
+                                    <strong>Total</strong>
+                                </td>
+                                <td class="right">
+                                    <strong>{{Sale.TotalAmount}} BDT</strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <a href="#" class="btn btn-danger" ng-click="ShowHideEdit()"><i class="fa fa-times"></i>Cancel</a>
+
+        </div>
+    </div>
+
+    <div class="col-xl-12 col-md-12 mb-12" ng-show="list">
+        <div class="card border-left-primary border-bottom-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="form-group col-md-6">
+                            <div class="text-xl font-weight-bold text-primary text-uppercase mb-1">SaleDetail List</div>
+                        </div>
+                        <form method="post" action="@Url.Action("MakeReport","Report")">
+                            <label>FromDate</label>
+                            <input type="date" name="fromDate" />
+                            <label>ToDate</label>
+                            <input type="date" name="toDate" />
+                            <input type="submit" value="Print" class="btn btn-success" />
+                        </form><br /><br />
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead class="bg-gradient-primary text-white text-center">
+                                    <tr>
+                                        <th>Serial No</th>
+                                        <th>
+                                            Customer name
+                                        </th>
+                                        <th>
+                                            Customer Phone
+                                        </th>
+                                        <th>
+                                            Sales Date
+                                        </th>
+                                        <th>
+                                            Action
+                                        </th>
+                                        <th>
+                                            Print
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="trDiv" class="text-gray-900 text-center">
+                                    @if (Model != null)
+                                    {
+                                        foreach (var item in Model)
+                                        {
+                                            <tr id="row_@item.SaleId">
+                                                <td>
+                                                    @(serial++)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.CustomerName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.CustomerPhone)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                                                </td>
+                                                <td><a href="#" class="btn btn-success" ng-click="ShowHideEdit();GetInvoiceSalesBySalesId(@item.SaleId);"><i class="fa fa-edit"></i>Edit</a></td>
+                                                <td>
+                                                    <a class="btn btn-success" href="@Url.Action("MakeReport","Voucher", new { id = item.SaleId })">Print</a>
+                                                </td>
+                                            </tr>
+}
+
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/Home/HomeInvoiceListController.js"></script>

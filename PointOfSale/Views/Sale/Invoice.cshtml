@@ -1,0 +1,85 @@
+﻿
+@{ ViewBag.Title = "Invoice"; }
+<style>
+    .BorderLess {
+        border: none;
+    }
+</style>
+<div class="container" ng-controller="HomeInvoice">
+    <div class="card">
+        <div class="card-header">
+            <input type="hidden" id="OrderNo" value="@ViewBag.InvoiceNum" />
+            Order
+            <strong>@ViewBag.InvoiceNum</strong>
+            <span class="float-right"> <a class="btn btn-success" style="cursor: pointer; color: white" ng-click="SaveInvoice()">Save</a></span>
+
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive-sm">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="center">#</th>
+                            <th>Item</th>
+                            <th class="right">Unit Cost</th>
+                            <th class="center">Qty</th>
+                            <th class="right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="cart in InvoiceCart">
+                            <td class="center">{{$index+1}}</td>
+                            <td class="left strong">
+                                <select ng-model="cart.Id" ng-click="SetValueOfProduct(cart.Id);SubTotalCalculation();">
+                                    <option selected disabled value="">--Select--</option>
+                                    <option ng-repeat="product in ProductList" value="{{product.Id}}">{{product.Name}}</option>
+                                </select>
+                            </td>
+                            <td class="right"><input style="width: 120px" ng-model="cart.UnitPrice" value="{{cart.UnitPrice}}"/></td>
+                            <td class="center"><input style="width: 120px" ng-model="cart.Quantity" ng-change="OnChangeLineTotalSet(cart.Id);SubTotalCalculation();" value="1" type="number" placeholder="Quantity" /></td>
+                            <td class="right"><input style="width: 120px" value={{cart.Quantity*cart.UnitPrice}} ng-model="cart.LineTotal" /></td>
+                            <td><a href="#" ng-click="RowDelete($index)"><i class="fa fa-times"></i></a></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="#" ng-click="AddNewRow()"><i class="fa fa-plus"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-sm-5">
+
+                </div>
+
+                <div class="col-lg-6 col-sm-6 ml-auto">
+                    <table class="table table-clear">
+                        <tbody>
+                            <tr>
+                                <td class="left">
+                                    <strong>Subtotal</strong>
+                                </td>
+                                <td class="right">{{Sale.Subtotal}} BDT</td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="left">
+                                    <strong>Total</strong>
+                                </td>
+                                <td class="right">
+                                    <strong>{{Sale.TotalAmount}} BDT</strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/Home/HomeInvoiceController.js"></script>

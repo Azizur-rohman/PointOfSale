@@ -1,0 +1,284 @@
+﻿@model IEnumerable<PointOfSale.Models.Sale>
+@{ ViewBag.Title = "Sale";
+    var serial = 1; }
+
+<div class="container card border-bottom-primary shadow-lg p-3 mb-5 bg-body rounded-3 w-50 p-3">
+
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-danger">
+            <strong>@ViewBag.Message</strong>
+        </div>
+    }
+
+    @if (ViewBag.Messages != null)
+    {
+        <div class="alert alert-success">
+            <strong>@ViewBag.Messages</strong>
+        </div>
+    }
+
+<form class="row g-3 needs-validation" novalidate enctype="multipart/form-data" method="post" action="@Url.Action("SaleCreate","Sale")">
+    <div class="col-12">
+        <h3>
+            Create Sale
+        </h3>
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustom01" class="form-label">Order No</label>
+        <input type="number" class="form-control h-25 p-3" id="fname" name="OrderNo" placeholder="Customer order no..." required />
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+            Please enter customer order no.
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustom01" class="form-label">Customer Name</label>
+        <input type="text" class="form-control h-25 p-3" id="fname" name="CustomerName" placeholder="Customer name..." required />
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+            Please enter customer name.
+        </div>
+    </div>
+    <div class="col-12">
+        <label for="validationCustom01" class="form-label">Customer Address</label>
+        <input type="text" class="form-control h-25 p-3" id="fname" name="CustomerAddress" placeholder="Customer address..." required />
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+            Please enter customer address.
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustom01" class="form-label">Customer Phone</label>
+        <input type="number" class="form-control h-25 p-3" id="fname" name="CustomerPhone" placeholder="Customer phone number..." required />
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+            Please enter customer phone number.
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustom01" class="form-label">Order Date</label>
+        <input type="date" class="form-control h-25 p-3" id="fname" name="OrderDate" placeholder="Order Date..." required />
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+            Please enter customer order date.
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustom01" class="form-label">Payment Method</label>
+        <input type="text" class="form-control h-25 p-3" id="fname" name="PaymentMethod" placeholder="Payment mathod..." required />
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+            Please enter customer payment method.
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustom01" class="form-label">Total Amount</label>
+        <input type="number" class="form-control h-25 p-3" id="fname" name="TotalAmount" placeholder="Total amount..." required />
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+            Please enter customer total amount.
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+            <label class="form-check-label" for="invalidCheck">
+                Agree to terms and conditions
+            </label>
+            <div class="invalid-feedback">
+                You must agree before submitting.
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <button class="btn btn-primary" type="submit">Add Sale</button>
+    </div>
+</form>
+</div>
+<br />
+
+<div class="col-xl-12 col-md-12 mb-12">
+    <div class="card border-left-primary border-bottom-primary shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="form-group col-md-6">
+                        <div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Sale List</div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead class="bg-gradient-primary text-white text-center">
+                                <tr>
+                                    <th>Serial No</th>
+                                    <th>Order No</th>
+                                    <th>Customer Name</th>
+                                    <th>Customer Phone</th>
+                                    <th>Customer Address</th>
+                                    <th>Order Date</th>
+                                    <th>Payment Method</th>
+                                    <th>Total Amount</th>
+                                    <th>Created By</th>
+                                    <th>Created Date</th>
+                                    <th>Updated By</th>
+                                    <th>Updated Date</th>
+                                    <th>
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="trDiv" class="text-gray-900 text-center">
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                <tr id="row_@item.SaleId">
+                                    <td>
+                                        @(serial++)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OrderNo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CustomerName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CustomerPhone)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CustomerAddress)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OrderDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PaymentMethod)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TotalAmount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CreatedBy)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CreatedDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UpdatedBy)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UpdatedDate)
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-secondary" href="@Url.Action("SaleEdit", "Sale", new { id = item.SaleId })">Edit <i class="fas fa-edit"></i></a> |
+                                        <a class="btn btn-danger" onclick="ConfirmDelete(@item.SaleId)">Delete <i class="fas fa-trash-alt"></i> </a>
+                                    </td>
+                                </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                        <div class="modal fade" id="myModal">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+
+                                    <div class="modal-header">
+                                        <div class="float-left">
+                                            <h4 class="modal-title">Delete Sale</h4>
+                                        </div>
+                                        <div class="float-right">
+                                            <a href="#" class="close" data-dismiss="modal">&times;</a>
+                                        </div>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h5>Are you sure ? You want to delete this. </h5>
+
+                                        <div style="text-align:center;display:none" id="loaderDiv">
+                                            <img src="~/AppFile/loading-load.gif" style="height:200px;width:200px" />
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                                        <a href="#" class="btn btn-success" onclick="DeleteSale()">Confirm</a>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="hiddenSaleId" />
+</div>
+<script>
+    // formvalidation
+    (function () {
+        'use strict'
+
+
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })();
+    setTimeout(function () { $(".alert").css('display', 'none'); }, 5000);
+
+    //Delete Category
+    var ConfirmDelete = function (SaleId) {
+
+        $("#hiddenSaleId").val(SaleId);
+        $("#myModal").modal('show');
+
+    }
+
+    var DeleteSale = function () {
+
+        $("#loaderDiv").show();
+
+        var slId = $("#hiddenSaleId").val();
+
+        $.ajax({
+
+            type: "POST",
+            url: "/Sale/DeleteSale",
+            data: { SaleId: slId },
+            success: function (result) {
+                $("#loaderDiv").hide();
+                $("#myModal").modal("hide");
+                $("#row_" + slId).remove();
+
+            }
+
+        })
+
+    }
+</script>

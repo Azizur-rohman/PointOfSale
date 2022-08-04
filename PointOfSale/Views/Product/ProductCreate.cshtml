@@ -1,0 +1,237 @@
+﻿@model IEnumerable<PointOfSale.Models.Product>
+@{ ViewBag.Title = "Product";
+    var serial = 1; }
+
+<div class="container card border-bottom-primary shadow-lg p-3 mb-5 bg-body rounded-3 w-50 p-3">
+
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-danger">
+            <strong>@ViewBag.Message</strong>
+        </div>
+    }
+
+    @if (ViewBag.Messages != null)
+    {
+        <div class="alert alert-success">
+            <strong>@ViewBag.Messages</strong>
+        </div>
+    }
+
+<form class="user">
+    <div class="col-12">
+        <h3>
+            Create Product
+        </h3>
+    </div>
+    <input type="hidden" id="hiddenProductId" />
+    <div class="form-group col-md-12">
+        <input type="text" class="form-control form-control-user" id="productName" placeholder="productName">
+    </div>
+    <div class="form-group col-md-12">
+        <input type="text" class="form-control form-control-user" id="productCode" placeholder="productCode">
+    </div>
+    <div class="form-group col-md-12">
+        <input type="number" class="form-control form-control-user" id="unitPrice" placeholder="UnitPrice">
+    </div>
+    <div class="col-12">
+        <a href="#" onclick="SaveUser()" class="btn btn-primary btn-sm">
+            Save
+        </a>
+    </div>
+</form>
+</div>
+<br />
+
+<div class="col-xl-12 col-md-12 mb-12">
+    <div class="card border-left-primary border-bottom-primary shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="form-group col-md-6">
+                        <div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Product List</div>
+                    </div>
+                    <br />
+                    <div class="col-xl-12 col-md-12 mb-12">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="form-group col-md-6">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Category List</div>
+                                        </div>
+
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>ProductName</th>
+                                                    <th>ProductCode</th>
+                                                    <th>UnitPrice</th>
+                                                    <th>
+                                                        Action
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="trDiv"></tbody>
+                                        </table>
+                                        <div class="modal fade" id="myModal">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+
+
+                                                    <div class="modal-header">
+                                                        <div class="float-left">
+                                                            <h4 class="modal-title">Delete Product</h4>
+                                                        </div>
+                                                        <div class="float-right">
+                                                            <a href="#" class="close" data-dismiss="modal">&times;</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <h5>Are you sure ? You want to delete this. </h5>
+
+                                                        <div style="text-align:center;display:none" id="loaderDiv">
+                                                            <img src="~/AppFile/loading-load.gif" style="height:200px;width:200px" />
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <a href="" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                                                        <a href="javascript:void(0)" class="btn btn-success" onclick="DeleteProduct()">Confirm</a>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        GetAllProduct();
+    });
+
+    function SaveUser() {
+        var product = new Object();
+        product.Id = $("#Id").val();
+        product.ProductCode= $("#productCode").val();
+        product.ProductName = $("#productName").val();
+        product.UnitPrice = $("#unitPrice").val();
+        var data = JSON.stringify({
+            cat: product
+        });
+        return $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: "/Product/SaveProduct",
+            data: data,
+            success: function (result) {
+                if (result == true) {
+                    GetAllProduct();
+                    Reset();
+                    alert("Save Success!");
+                }
+                else {
+                    alert("Save failed!");
+                }
+            },
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+
+    function GetAllProduct() {
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'Get',
+            url: "/Product/GetAllProduct",
+            success: function (data) {
+                $("#trDiv").html('');
+                var tdContent = '';
+                for (var i = 0; i < data.length; i++) {
+                    tdContent += '<tr><td>' + data[i].ProductName + '</td>' + '<td>' + data[i].ProductCode + '</td>' + '<td>' + data[i].UnitPrice + '</td>' + '<td><a href="#" onclick="Edit(' + data[i].Id + ",'" + data[i].ProductName + "','" + data[i].ProductCode + "'," + data[i].UnitPrice + ');">Edit</a>|<a class="btn btn-danger" style="cursor: pointer; color: white" onclick="ConfirmDelete(' + data[i].Id + ')">Delete <i class="fas fa-trash-alt"></i></a></td></tr>'; // if Name is property of your Person object
+                }
+                $("#trDiv").append(tdContent);
+            },
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+    function Edit(catId, catName, catCode, unitPrice) {
+        $("#hiddenProductId").val(catId);
+        $("#productName").val(catName);
+        $("#productCode").val(catCode);
+        $("#unitPrice").val(unitPrice);
+    }
+    function Reset() {
+        $("#hiddenProductId").val(null);
+        $("#productName").val(null);
+        $("#productCode").val(null);
+        $("#unitPrice").val(null);
+    }
+
+    // formvalidation
+    (function () {
+        'use strict'
+
+
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })();
+    setTimeout(function () { $(".alert").css('display', 'none'); }, 5000);
+
+    //Delete Category
+    var ConfirmDelete = function (ProductId) {
+
+        $("#hiddenProductId").val(ProductId);
+        $("#myModal").modal('show');
+
+    }
+
+    var DeleteProduct = function () {
+
+        $("#loaderDiv").show();
+
+        var pdtId = $("#hiddenProductId").val();
+
+        $.ajax({
+
+            type: "POST",
+            url: "/Product/DeleteProduct",
+            data: { ProductId: pdtId },
+            success: function (result) {
+                GetAllProduct();
+                Reset();
+                $("#loaderDiv").hide();
+                $("#myModal").modal("hide");
+                $("#row_" + pdtId).remove();
+
+            }
+
+        })
+
+    }
+</script>

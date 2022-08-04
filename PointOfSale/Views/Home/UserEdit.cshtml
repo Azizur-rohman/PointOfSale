@@ -1,0 +1,95 @@
+﻿@model PointOfSale.Models.User
+
+@{
+    ViewBag.Title = "UserEdit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>UserEdit</h2>
+
+@Html.AntiForgeryToken()
+
+<div class="container card border-bottom-primary shadow-lg p-3 mb-5 bg-body rounded-3 w-50 p-3">
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-danger">
+            <strong>@ViewBag.Message</strong>
+        </div>
+    }
+    <form class="row g-3 needs-validation" novalidate enctype="multipart/form-data" method="post" action="@Url.Action("UserEdit","Home")">
+
+        <div class="col-12">
+            <h3>
+                Edit Product
+            </h3>
+        </div>
+        <hr />
+        @Html.HiddenFor(model => model.UserId)
+
+        <div class="col-md-6">
+            <label for="validationCustom01" class="form-label">User Name</label>
+            @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control h-25 p-3", required = "required" } })
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+            <div class="invalid-feedback">
+                Please enter User name.
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="validationCustom01" class="form-label">Password</label>
+            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control h-25 p-3", required = "required" } })
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+            <div class="invalid-feedback">
+                Please enter Password.
+            </div>
+        </div>
+
+        <div class="col-md-12" style="margin-bottom: 10px;">
+            <label for="validationCustom01" class="form-label">Role</label>
+            <select class="form-control h-26 p-0" name="Role" required>
+                <option value="@Model.Role">@Model.Role</option>
+                @if (@Model.Role == "Admin")
+                {
+                <option value="Editor">Editor</option>
+                }
+                else
+                {
+                <option value="Admin">Admin</option>
+                }
+            </select>
+        </div>
+            <div class="col-md-2">
+                <input type="submit" value="Save" class="btn btn-success" />
+            </div>
+            <div class="col-md-2">
+                <div class="btn btn-danger">
+                    <a href="@Url.Action("UserCreate", "Home")" style="text-decoration:none;color:white;">Cancel</a>
+                </div>
+            </div>
+</form>
+</div>
+<script>
+    // formvalidation
+    (function () {
+        'use strict'
+
+
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })();
+    setTimeout(function () { $(".alert").css('display', 'none'); }, 5000);
+</script>

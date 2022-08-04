@@ -1,0 +1,126 @@
+﻿@model PointOfSale.Models.Sale
+
+@{
+    ViewBag.Title = "SaleEdit";
+}
+@Html.AntiForgeryToken()
+
+<div class="container card border-bottom-primary shadow-lg p-3 mb-5 bg-body rounded-3 w-50 p-3">
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-danger">
+            <strong>@ViewBag.Message</strong>
+        </div>
+    }
+<form class="row g-3 needs-validation" novalidate enctype="multipart/form-data" method="post" action="@Url.Action("SaleEdit","Sale")">
+
+    <div class="col-12">
+        <h3>
+            Edit Sale
+        </h3>
+    </div>
+    <hr />
+    @Html.HiddenFor(model => model.SaleId)
+    <div class="col-md-6">
+        <label for="validationCustom01" class="form-label">Order No</label>
+        @Html.EditorFor(model => model.OrderNo, new { htmlAttributes = new { @class = "form-control h-25 p-3", required = "required" } })
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+            Please enter product order no.
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustom01" class="form-label">Customer Name</label>
+        @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control h-25 p-3", required = "required" } })
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+            Please enter customer name.
+        </div>
+    </div>
+    <div class="col-12">
+        <label for="validationCustom01" class="form-label">Customer Address</label>
+        @Html.EditorFor(model => model.CustomerAddress, new { htmlAttributes = new { @class = "form-control h-25 p-3", required = "required" } })
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+            Please enter customer address.
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustom01" class="form-label">Customer Phone</label>
+        @Html.EditorFor(model => model.CustomerPhone, new { htmlAttributes = new { @class = "form-control h-25 p-3", required = "required" } })
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+            Please enter customer phone.
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustom01" class="form-label">Order Date</label>
+        @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control h-25 p-3", required = "required" } })
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+            Please enter customer order date.
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustom01" class="form-label">Payment Method</label>
+        @Html.EditorFor(model => model.PaymentMethod, new { htmlAttributes = new { @class = "form-control h-25 p-3", required = "required" } })
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+            Please enter customer payment method.
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustom01" class="form-label">Total Amount</label>
+        @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @class = "form-control h-25 p-3", required = "required", Type = "number" } })
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+        <div class="invalid-feedback">
+            Please enter total amount.
+        </div>
+    </div>
+    <div class="col-md-2">
+        <input type="submit" value="Save" class="btn btn-success" />
+    </div>
+    <div class="col-md-2">
+        <div class="btn btn-danger">
+            <a href="@Url.Action("SaleCreate", "Sale")" style="text-decoration:none;color:white;">Cancel</a>
+        </div>
+    </div>
+</form>
+
+</div>
+
+<script>
+    // formvalidation
+    (function () {
+        'use strict'
+
+
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })();
+    setTimeout(function () { $(".alert").css('display', 'none'); }, 5000);
+</script>
